@@ -34,18 +34,13 @@ then
 	cat $sid".xml"  | grep "<url>.*<.url>" | sed "s/.*\[CDATA\[\(.*\)\]\].*/\1/" > $sid".down"
 	num=$(wc -l < $sid".down")
 	format=$(sed "s/.*\([a-z]\{3\}\)$/\1/p" < $sid".down"| sed -n '1p')
-	for ((i=1;i<=$num;i++))
-	do
-		(curl $(sed -n "$i"p < $sid".down") > "$title.part$i.$format" &) 
-	done
+#	for ((i=1;i<=$num;i++))
+#	do
+#		(url=$(sed -n "$i"p < $sid".down"); echo $url ; curl $url > part$i.$format &) 
+#	done
 	curl http://comment.bilibili.tv/dm,$sid > "$title.xml"	
 fi
 
 read start
 
-touch "$title.$format"
-
-for ((i=1;i<=$num;i++))
-do
-	mencoder -forceidx -of lavf -oac copy -ovc copy -o "$title.$format" "$title.$format" "$title.part$i.$format"	
-done
+mencoder -oac pcm -ovc copy -o "$title.$format" part*.$format
