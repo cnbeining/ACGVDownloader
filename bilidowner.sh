@@ -39,10 +39,11 @@ case $v in
 	if [ ! -e $sid".html" ] ; then curl -o $sid".html" "http://www.tudou.com/programs/view/$sid"; fi
 	tuid=$(grep "iid =" $sid".html" | sed "s/.*\([0-9]\).*/\1/")
 	if [ ! -e $sid".xml" ] ; then curl -o $sid".xml" "http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it=$tuid"; fi
-	cat $sid".xml" | grep "
+	cat $sid".xml" | sed "s/.*http\(.*\)<.f>/\1/" > $sid".down"
 	;;
 	"ykid"
 	echo "This video comes from Youku"
+	if [ ! -e $sid".xml" ] ; then curl -o $sid".xml" "http://v.youku.com/player/getPlayList/VideoIDS/"$sid"
 	;;
 	"qid"
 	echo "This video comes from QQ"
