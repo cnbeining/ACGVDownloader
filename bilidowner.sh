@@ -61,4 +61,4 @@ esac
 
 read start
 
-mencoder -oac pcm -ovc copy -o "$title.$format" part*.$format
+mencoder -forceidx -of lavf -oac mp3lame -ovc copy -o "$title.$format" part*.$format
