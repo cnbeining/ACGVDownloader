@@ -1,0 +1,6 @@
+# Lines starting with "#" are considered as comments
+# ignore any downloaded video files
+*.*
+!*.sh
+!README
+!.gitignore
