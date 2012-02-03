@@ -43,7 +43,7 @@ case $v in
 	;;
 	"ykid"
 	echo "This video comes from Youku"
-	if [ ! -e $sid".xml" ] ; then curl -o $sid".xml" "http://v.youku.com/player/getPlayList/VideoIDS/"$sid"
+	if [ ! -e $sid".xml" ] ; then curl -o $sid".xml" "http://v.youku.com/player/getPlayList/VideoIDS/"$sid
 	;;
 	"qid"
 	echo "This video comes from QQ"
