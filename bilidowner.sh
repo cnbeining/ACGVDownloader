@@ -13,6 +13,8 @@
 #      REVISION:  ---
 #===============================================================================
 
+# read address from input and get $sid (original id from the source provider), $title and $v(which is used to know where did the video come from) 
+
 id=$(echo $1 | sed 's/.*\(av[0-9]\{6\}\).*/\1/')
 echo $id
 if [ ! -e $id".html" ]
@@ -27,6 +29,8 @@ title=$(cat $id".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/titl
 
 v=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z]*\).*/\1/")
 sid=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z]*\).*/\2/")
+
+# parse the real url and collect them into $sid.down file
 
 case $v in
 	"vid"
@@ -43,7 +47,7 @@ case $v in
 	;;
 	"ykid"
 	echo "This video comes from Youku"
-	if [ ! -e $sid".xml" ] ; then curl -o $sid".xml" "http://v.youku.com/player/getPlayList/VideoIDS/"$sid
+	ykdowner.sh http://v.youku.com/v_show/id_$sid
 	;;
 	"qid"
 	echo "This video comes from QQ"
@@ -52,14 +56,17 @@ case $v in
 	echo "This video comes from 6cn"
 	;;
 esac
+
+# download the videos from $sid.down; I will put those lines below into an individual file so other downloader script can also use it
+
 	num=$(wc -l < $sid".down")
 	format=$(sed "s/.*\([a-z]\{3\}\)$/\1/p" < $sid".down"| sed -n '1p')
 	for ((i=1;i<=$num;i++))
 	do
 		(url=$(sed -n "$i"p < $sid".down"); echo $url ; curl $url > part$i.$format &) 
 	done
-	curl http://comment.bilibili.tv/dm,$sid > "$title.xml"	
+	curl -o "$title.xml" "http://comment.bilibili.tv/dm,$sid"	
 
 read start
 
-mencoder -forceidx -of lavf -oac mp3lame -ovc copy -o "$title.$format" part*.$format
+mencoder -forceidx -oac mp3lame -ovc copy -o "$title.$format" part*.$format
