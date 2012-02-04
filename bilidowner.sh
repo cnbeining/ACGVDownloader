@@ -66,6 +66,4 @@ esac
 	done
 	curl -o "$title.xml" "http://comment.bilibili.tv/dm,$sid"	
 
-read start
 
-mencoder -forceidx -oac mp3lame -ovc copy -o "$title.$format" part*.$format
