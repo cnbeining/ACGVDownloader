@@ -15,7 +15,7 @@
 
 # read address from input and get $sid (original id from the source provider), $title and $v(which is used to know where did the video come from) 
 
-id=$(echo $1 | sed 's/.*\(av[0-9]\{6\}\).*/\1/')
+id=$(echo $1 | sed "s/.*\(av[0-9]\{6\}\).*/\1/")
 echo $id
 if [ ! -e $id".html" ]
 then
@@ -40,14 +40,13 @@ case $v in
 	;;
 	"uid"
 	echo "This video comes from Tudou"
-	if [ ! -e $sid".html" ] ; then curl -o $sid".html" "http://www.tudou.com/programs/view/$sid"; fi
-	tuid=$(grep "iid =" $sid".html" | sed "s/.*\([0-9]\).*/\1/")
+	if [ ! -e $sid".html" ] ; then curl -o $sid".html" "http://www.tudou.com/programs/view/$sid"; fi	tuid=$(grep "iid =" $sid".html" | sed "s/.*\([0-9]\).*/\1/")
 	if [ ! -e $sid".xml" ] ; then curl -o $sid".xml" "http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it=$tuid"; fi
 	cat $sid".xml" | sed "s/.*http\(.*\)<.f>/\1/" > $sid".down"
 	;;
 	"ykid"
 	echo "This video comes from Youku"
-	ykdowner.sh http://v.youku.com/v_show/id_$sid
+	ykdowner.sh "http://v.youku.com/v_show/id_$sid.html"
 	;;
 	"qid"
 	echo "This video comes from QQ"
