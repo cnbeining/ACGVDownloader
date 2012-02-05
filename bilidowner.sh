@@ -62,12 +62,13 @@ num=$(wc -l < $sid".down")
 format=$(sed "s/.*\([a-z]\{3\}\)$/\1/p" < $sid".down"| sed -n '1p')
 for ((i=1;i<=$num;i++))
 do
-        comm="$comm --index-out=$i=part$i.$format"
+	let ii=i*2-1
+	sed "$ii a\  out=part$i.$format" <$sid.down > temp.down
+	mv temp.down $sid.down
 done    
 
-aria2c $comm -U firefox -i $sid.down
-
-curl -o "$title.xml" "http://comment.bilibili.tv/dm,$sid"	
+aria2c -U firefox -i $sid.down
+curl --compressed -o "$title.xml" "http://comment.bilibili.tv/dm,$sid"	
 
 
 
