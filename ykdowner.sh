@@ -21,8 +21,8 @@
 sid=$(echo $1 | sed "s/.*id_\(.*\).html/\1/")
 if [ $sid==$1 ] ; then sid=$(echo $1 | sed "s/.*v_playlist\/\(.*\).html/\1/"); fi
 mkdir $sid;cd $sid #create a temp folder to download the video
-curl -o temp.html $1
-title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/^M//")
+curl $1  > temp".html"
+title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/^\(.*\).$/\1/")
 rm temp.html
 flvcda='parse.php?kw='
 # flvcdb='.html&format=high'

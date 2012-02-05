@@ -20,12 +20,12 @@ echo $id
 if [ ! -e $id".html" ]
 then
 	echo "Analysing on the input web link"
-	curl --compressed -o $id".html" $1 
+	curl --compressed $1 > $id".html" 
 #curl $1 |gunzip > index.html
 #curl -v to do debug; bilibili's webpages are compressed as gzip
 fi
 
-title=$(cat $id".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/")
+title=$(cat $id".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/^\(.*\).$/\1/")
 
 v=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z]*\).*/\1/")
 sid=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z]*\).*/\2/")
