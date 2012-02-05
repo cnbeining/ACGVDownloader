@@ -1,11 +1,11 @@
 #!/bin/bash
 #===============================================================================
 #
-#          FILE:  ykdowner.sh
+#          FILE:  sndowner.sh
 # 
-#         USAGE:  ./ykdowner.sh 
+#         USAGE:  ./sndowner.sh 
 # 
-#   DESCRIPTION:  To download video files from Youku
+#   DESCRIPTION:  To download video files from Sina
 # 
 #       OPTIONS:  ---
 #  REQUIREMENTS:  ---
@@ -13,7 +13,7 @@
 #         NOTES:  ---
 #        AUTHOR:  Lichi Zhang (), tigerdavidxeon@gmail.com
 #       COMPANY:  University of York, UK
-#       VERSION:  0.5 
+#       VERSION:  0.7 
 #       CREATED:  02/03/2012 06:56:53 PM GMT
 #      REVISION:  ---
 #===============================================================================

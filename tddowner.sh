@@ -1,11 +1,11 @@
 #!/bin/bash
 #===============================================================================
 #
-#          FILE:  ykdowner.sh
+#          FILE:  tddowner.sh
 # 
-#         USAGE:  ./ykdowner.sh 
+#         USAGE:  ./tddowner.sh 
 # 
-#   DESCRIPTION:  To download video files from Youku
+#   DESCRIPTION:  To download video files from Tudou
 # 
 #       OPTIONS:  ---
 #  REQUIREMENTS:  ---
@@ -13,8 +13,8 @@
 #         NOTES:  ---
 #        AUTHOR:  Lichi Zhang (), tigerdavidxeon@gmail.com
 #       COMPANY:  University of York, UK
-#       VERSION:  0.5 
-#       CREATED:  02/03/2012 06:56:53 PM GMT
+#       VERSION:  0.6 
+#       CREATED:  02/05/2012 00:55:53 AM GMT
 #      REVISION:  ---
 #===============================================================================
 

@@ -1,11 +1,11 @@
 #!/bin/bash
 #===============================================================================
 #
-#          FILE:  ykdowner.sh
+#          FILE:  qqdowner.sh
 # 
-#         USAGE:  ./ykdowner.sh 
+#         USAGE:  ./qqdowner.sh 
 # 
-#   DESCRIPTION:  To download video files from Youku
+#   DESCRIPTION:  To download video files from Tecent
 # 
 #       OPTIONS:  ---
 #  REQUIREMENTS:  ---
@@ -14,7 +14,7 @@
 #        AUTHOR:  Lichi Zhang (), tigerdavidxeon@gmail.com
 #       COMPANY:  University of York, UK
 #       VERSION:  0.5 
-#       CREATED:  02/03/2012 06:56:53 PM GMT
+#       CREATED:  02/05/2012 00:53:53 AM GMT
 #      REVISION:  ---
 #===============================================================================
 
