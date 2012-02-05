@@ -2,5 +2,6 @@
 # ignore any downloaded video files
 *.*
 !*.sh
+!*.rb
 !README
 !.gitignore
