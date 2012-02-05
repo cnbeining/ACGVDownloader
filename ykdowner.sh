@@ -19,19 +19,20 @@
 #===============================================================================
 
 sid=$(echo $1 | sed "s/.*id_\(.*\).html/\1/")
+if [ $sid==$1 ] ; then sid=$(echo $1 | sed "s/.*v_playlist\/\(.*\).html/\1/"); fi
 mkdir $sid;cd $sid #create a temp folder to download the video
 curl -o temp.html $1
 title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/\?//")
 rm temp.html
-flvcda='parse.php?kw=http://v.youku.com/v_show/id_'
+flvcda='parse.php?kw='
 # flvcdb='.html&format=high'
-flvcdc='.html&format=super'
+flvcdc='&format=super'
 echo $sid
 
 # if [ ! -e $sid".html" ]
 # then
 	echo "Analysing on the video provider web link"
-	wget --output-document=$sid.html "http://flvcd.com/$flvcda$sid$flvcdc"
+	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1$flvcdc"
 	# tt=$(cat "$sid.html" | grep "<title>.*<\/title>" | sed "s/.*<title>\(.*\)<\/title>.*/\1/")
 	# if echo $tt | grep -q "301" 
 	# then
