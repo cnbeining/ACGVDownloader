@@ -58,12 +58,16 @@ esac
 
 # download the videos from $sid.down; I will put those lines below into an individual file so other downloader script can also use it
 
-	num=$(wc -l < $sid".down")
-	format=$(sed "s/.*\([a-z]\{3\}\)$/\1/p" < $sid".down"| sed -n '1p')
-	for ((i=1;i<=$num;i++))
-	do
-		(url=$(sed -n "$i"p < $sid".down"); echo $url ; curl $url > part$i.$format &) 
-	done
-	curl -o "$title.xml" "http://comment.bilibili.tv/dm,$sid"	
+num=$(wc -l < $sid".down")
+format=$(sed "s/.*\([a-z]\{3\}\)$/\1/p" < $sid".down"| sed -n '1p')
+for ((i=1;i<=$num;i++))
+do
+        comm="$comm --index-out=$i=part$i.$format"
+done    
+
+aria2c $comm -U firefox -i $sid.down
+
+curl -o "$title.xml" "http://comment.bilibili.tv/dm,$sid"	
+
 
 

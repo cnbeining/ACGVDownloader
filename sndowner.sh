@@ -18,14 +18,14 @@
 #      REVISION:  ---
 #===============================================================================
 
-sid=$(echo $1 | sed "s/.*id_\(.*\).html/\1/")
+sid=$(echo $1 | sed "s/.*\/v\/b\/\(.*\).html$/\1/")
 mkdir $sid;cd $sid #create a temp folder to download the video
 curl -o temp.html $1
 title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/\?//")
 rm temp.html
-flvcda='parse.php?kw=http://v.youku.com/v_show/id_'
+flvcda='parse.php?kw=http://video.sina.com.cn/v/b/'
 # flvcdb='.html&format=high'
-flvcdc='.html&format=super'
+flvcdc='.html'
 echo $sid
 
 # if [ ! -e $sid".html" ]
@@ -40,12 +40,12 @@ echo $sid
 	# fi
 # fi
 
-cat $sid".html" | grep 'http://f.youku.com/' > temp.down
+cat $sid".html" | grep -i -e 'http://video.sinaedge.com' -e '58.63.235' > temp.down
 sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e 's/<input type="hidden" name="inf" value="//' temp.down > $sid.down
 rm temp.down 
 
 num=$(wc -l < $sid".down")
-format=$(sed -e "s/.*\/st\/\(.\{3\}\).*/\1/p" < $sid".down"| sed -n '1p')
+format=hlv
 
 for ((i=1;i<=$num;i++))
 do
@@ -54,14 +54,7 @@ do
 	mv temp.down $sid.down
 done    
 
-aria2c -U firefox -i $sid.down
+aria2c  -U firefox -i $sid.down
 
 mencoder -forceidx -oac mp3lame -ovc copy -o "$sid - $title.$format" *.$format
 mv "$sid - $title.$format" ../;cd ..;rm -rf $sid
-
-# if [ ! -e $sid".xml" ] ; then curl -o $sid".xml" "http://v.youku.com/player/getPlayList/VideoIDS/"$sid; fi
-# tmpf=$(date +%s)
-# let tmps=1000+$RANDOM*999/32767
-# let tmpt=1000+$RANDOM*9000/32767
-# ffield=$tmpf$tmps$tmpt
-
