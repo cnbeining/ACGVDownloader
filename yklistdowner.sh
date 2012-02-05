@@ -28,6 +28,7 @@ rm temp.down
 num=$(wc -l < $pid".down")
 for ((i=1;i<$num;i++))
 do
-	url=$(sed -n "$ip").html
-	ykdowner.sh $url
+	echo "Start No.$i video"
+	url=$(awk "NR==$i" $pid".down").html
+	../ykdowner.sh $url
 done
