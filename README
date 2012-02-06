@@ -1,1 +1,7 @@
 Far from being finished, please don't download it at current time, many thanks
+The ykdowner (which is used for downloading videos from youku) is finished now, and also yklistdowner for youku's playlist.
+Need the following packages
+aria2
+python pip
+python request
+python aeidon
