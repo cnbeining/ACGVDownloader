@@ -1,11 +1,11 @@
 #!/bin/bash
 #===============================================================================
 #
-#          FILE:  qqdowner.sh
+#          FILE:  sndowner.sh
 # 
-#         USAGE:  ./qqdowner.sh 
+#         USAGE:  ./sndowner.sh 
 # 
-#   DESCRIPTION:  To download video files from Tecent
+#   DESCRIPTION:  To download video files from Sina
 # 
 #       OPTIONS:  ---
 #  REQUIREMENTS:  ---
@@ -13,15 +13,15 @@
 #         NOTES:  ---
 #        AUTHOR:  Lichi Zhang (), tigerdavidxeon@gmail.com
 #       COMPANY:  University of York, UK
-#       VERSION:  0.5 
-#       CREATED:  02/05/2012 00:53:53 AM GMT
+#       VERSION:  0.7 
+#       CREATED:  02/03/2012 06:56:53 PM GMT
 #      REVISION:  ---
 #===============================================================================
 
 sid=$(echo $1 | sed "s/.*\/v\/b\/\(.*\).html$/\1/")
 mkdir $sid;cd $sid #create a temp folder to download the video
-curl -o temp.html $1
-title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/\?//")
+curl $1 > temp".html" 
+title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/^\(.*\).$/\1/")
 rm temp.html
 flvcda='parse.php?kw=http://video.sina.com.cn/v/b/'
 # flvcdb='.html&format=high'
@@ -56,5 +56,10 @@ done
 
 aria2c  -U firefox -i $sid.down
 
-mencoder -forceidx -oac mp3lame -ovc copy -o "$sid - $title.$format" *.$format
+if [ $format=="mp4" ]; then
+	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$sid - $title.$format" *.$format
+else
+	mencoder -forceidx -oac mp3lame -ovc copy -o "$sid - $title.$format" *.$format
+fi
+
 mv "$sid - $title.$format" ../;cd ..;rm -rf $sid

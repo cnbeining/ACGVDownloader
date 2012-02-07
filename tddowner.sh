@@ -13,25 +13,24 @@
 #         NOTES:  ---
 #        AUTHOR:  Lichi Zhang (), tigerdavidxeon@gmail.com
 #       COMPANY:  University of York, UK
-#       VERSION:  0.6 
-#       CREATED:  02/05/2012 00:55:53 AM GMT
+#       VERSION:  0.7 
+#       CREATED:  02/03/2012 06:56:53 PM GMT
 #      REVISION:  ---
 #===============================================================================
 
-sid=$(echo $1 | sed "s/.*\/v\/b\/\(.*\).html$/\1/")
+sid=$(echo $1 | sed "s/.*view\/\(.*\)$/\1/")
 mkdir $sid;cd $sid #create a temp folder to download the video
-curl -o temp.html $1
-title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/\?//")
+curl $1 > temp".html" 
+title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/^\(.*\).$/\1/")
 rm temp.html
-flvcda='parse.php?kw=http://video.sina.com.cn/v/b/'
+flvcda='parse.php?kw='
 # flvcdb='.html&format=high'
-flvcdc='.html'
 echo $sid
 
 # if [ ! -e $sid".html" ]
 # then
 	echo "Analysing on the video provider web link"
-	wget --output-document=$sid.html "http://flvcd.com/$flvcda$sid$flvcdc"
+	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
 	# tt=$(cat "$sid.html" | grep "<title>.*<\/title>" | sed "s/.*<title>\(.*\)<\/title>.*/\1/")
 	# if echo $tt | grep -q "301" 
 	# then
@@ -40,12 +39,12 @@ echo $sid
 	# fi
 # fi
 
-cat $sid".html" | grep -i -e 'http://video.sinaedge.com' -e '58.63.235' > temp.down
+cat $sid".html" | grep -i '180.153.94'  > temp.down
 sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e 's/<input type="hidden" name="inf" value="//' temp.down > $sid.down
 rm temp.down 
 
 num=$(wc -l < $sid".down")
-format=hlv
+format=$(cat $sid".down" | sed "s/.*[0-9.]*\/\(.\{3\}\).*/\1/" | sed -n '1p')
 
 for ((i=1;i<=$num;i++))
 do
@@ -56,5 +55,10 @@ done
 
 aria2c  -U firefox -i $sid.down
 
-mencoder -forceidx -oac mp3lame -ovc copy -o "$sid - $title.$format" *.$format
+if [ $format=="mp4" ]; then
+	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$sid - $title.$format" *.$format
+else
+	mencoder -forceidx -oac mp3lame -ovc copy -o "$sid - $title.$format" *.$format
+fi
+
 mv "$sid - $title.$format" ../;cd ..;rm -rf $sid

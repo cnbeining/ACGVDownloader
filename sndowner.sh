@@ -23,15 +23,13 @@ mkdir $sid;cd $sid #create a temp folder to download the video
 curl $1 > temp".html" 
 title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/^\(.*\).$/\1/")
 rm temp.html
-flvcda='parse.php?kw=http://video.sina.com.cn/v/b/'
-# flvcdb='.html&format=high'
-flvcdc='.html'
+flvcda='parse.php?kw='
 echo $sid
 
 # if [ ! -e $sid".html" ]
 # then
 	echo "Analysing on the video provider web link"
-	wget --output-document=$sid.html "http://flvcd.com/$flvcda$sid$flvcdc"
+	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
 	# tt=$(cat "$sid.html" | grep "<title>.*<\/title>" | sed "s/.*<title>\(.*\)<\/title>.*/\1/")
 	# if echo $tt | grep -q "301" 
 	# then
