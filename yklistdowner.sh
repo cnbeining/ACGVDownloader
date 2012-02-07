@@ -3,7 +3,7 @@
 #
 #          FILE:  yklistdowner.sh
 # 
-#         USAGE:  ./yklistdowner.sh 
+#         USAGE:  ./yklistdowner.sh url 
 # 
 #   DESCRIPTION:  To download all videos in youku playlist
 # 

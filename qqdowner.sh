@@ -1,11 +1,11 @@
 #!/bin/bash
 #===============================================================================
 #
-#          FILE:  sndowner.sh
+#          FILE:  qqdowner.sh
 # 
-#         USAGE:  ./sndowner.sh 
+#         USAGE:  ./qqdowner.sh url
 # 
-#   DESCRIPTION:  To download video files from Sina
+#   DESCRIPTION:  To download video files from Tecent
 # 
 #       OPTIONS:  ---
 #  REQUIREMENTS:  ---
@@ -23,15 +23,13 @@ mkdir $sid;cd $sid #create a temp folder to download the video
 curl $1 > temp".html" 
 title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/^\(.*\).$/\1/")
 rm temp.html
-flvcda='parse.php?kw=http://video.sina.com.cn/v/b/'
-# flvcdb='.html&format=high'
-flvcdc='.html'
+flvcda='parse.php?kw='
 echo $sid
 
 # if [ ! -e $sid".html" ]
 # then
 	echo "Analysing on the video provider web link"
-	wget --output-document=$sid.html "http://flvcd.com/$flvcda$sid$flvcdc"
+	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
 	# tt=$(cat "$sid.html" | grep "<title>.*<\/title>" | sed "s/.*<title>\(.*\)<\/title>.*/\1/")
 	# if echo $tt | grep -q "301" 
 	# then
@@ -45,7 +43,19 @@ sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e 's/<input type="hidden" name="inf" 
 rm temp.down 
 
 num=$(wc -l < $sid".down")
-format=hlv
+if grep -q f4v < $sid".down"
+then
+	format=f4v
+elif grep -q mp4 < $sid".down"
+then
+	format=mp4
+elif grep -q hlv < $sid".down"
+then
+	format=hlv
+elif grep -q flv < $sid".down"
+then
+	format=flv
+fi
 
 for ((i=1;i<=$num;i++))
 do

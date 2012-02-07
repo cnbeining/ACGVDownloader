@@ -3,7 +3,7 @@
 #
 #          FILE:  sndowner.sh
 # 
-#         USAGE:  ./sndowner.sh 
+#         USAGE:  ./sndowner.sh url
 # 
 #   DESCRIPTION:  To download video files from Sina
 # 
@@ -43,7 +43,19 @@ sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e 's/<input type="hidden" name="inf" 
 rm temp.down 
 
 num=$(wc -l < $sid".down")
-format=hlv
+if grep -q f4v < $sid".down"
+then
+	format=f4v
+elif grep -q mp4 < $sid".down"
+then
+	format=mp4
+elif grep -q hlv < $sid".down"
+then
+	format=hlv
+elif grep -q flv < $sid".down"
+then
+	format=flv
+fi
 
 for ((i=1;i<=$num;i++))
 do

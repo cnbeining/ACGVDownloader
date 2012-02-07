@@ -3,7 +3,7 @@
 #
 #          FILE:  ykdowner.sh
 # 
-#         USAGE:  ./ykdowner.sh 
+#         USAGE:  ./ykdowner.sh url
 # 
 #   DESCRIPTION:  To download video files from Youku
 # 
@@ -54,7 +54,19 @@ sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e 's/<input type="hidden" name="inf" 
 rm temp.down 
 
 num=$(wc -l < $sid".down")
-format=$(sed -e "s/.*\/st\/\(.\{3\}\).*/\1/p" < $sid".down"| sed -n '1p')
+if grep -q f4v < $sid".down"
+then
+	format=f4v
+elif grep -q mp4 < $sid".down"
+then
+	format=mp4
+elif grep -q hlv < $sid".down"
+then
+	format=hlv
+elif grep -q flv < $sid".down"
+then
+	format=flv
+fi
 
 for ((i=1;i<=$num;i++))
 do
