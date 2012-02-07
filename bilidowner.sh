@@ -17,6 +17,7 @@
 
 id=$(echo $1 | sed "s/.*\(av[0-9]\{6\}\).*/\1/")
 echo $id
+mkdir $id;cd $id #create a temp folder to download the video
 if [ ! -e $id".html" ]
 then
 	echo "Analysing on the input web link"
@@ -30,33 +31,49 @@ title=$(cat $id".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/titl
 v=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z]*\).*/\1/")
 sid=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z]*\).*/\2/")
 
-# parse the real url and collect them into $sid.down file
+flvcda='parse.php?kw='
+# flvcdb='.html&format=high'
+echo $sid
 
-case $v in
-	"vid"
-	echo "This video comes from Sina"
-	if [ ! -e $sid".xml" ] ; then curl -o $sid".xml" "v.iask.com/v_play.php?vid=$sid" ; fi
-	cat $sid".xml"  | grep "<url>.*<.url>" | sed "s/.*\[CDATA\[\(.*\)\]\].*/\1/" > $sid".down"
-	;;
-	"uid"
-	echo "This video comes from Tudou"
-	if [ ! -e $sid".html" ] ; then curl -o $sid".html" "http://www.tudou.com/programs/view/$sid"; fi	tuid=$(grep "iid =" $sid".html" | sed "s/.*\([0-9]\).*/\1/")
-	if [ ! -e $sid".xml" ] ; then curl -o $sid".xml" "http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it=$tuid"; fi
-	cat $sid".xml" | sed "s/.*http\(.*\)<.f>/\1/" > $sid".down"
-	;;
-	"ykid"
-	echo "This video comes from Youku"
-	ykdowner.sh "http://v.youku.com/v_show/id_$sid.html"
-	;;
-	"qid"
-	echo "This video comes from QQ"
-	;;
-	"rid"
-	echo "This video comes from 6cn"
-	;;
-esac
+# if [ ! -e $sid".html" ]
+# then
+	echo "Analysing on the video provider web link"
+	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
 
-# download the videos from $sid.down; I will put those lines below into an individual file so other downloader script can also use it
+cat $sid".html" | grep -i "flv\|mp4\|h4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
+sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e 's/<input type="hidden" name="inf" value="//' temp.down > $sid.down
+rm temp.down 
+
+num=$(wc -l < $sid".down")
+if grep -q f4v < $sid".down"
+then
+	format=f4v
+elif grep -q mp4 < $sid".down"
+then
+	format=mp4
+elif grep -q hlv < $sid".down"
+then
+	format=hlv
+elif grep -q flv < $sid".down"
+then
+	format=flv
+fi
+
+for ((i=1;i<=$num;i++))
+do
+	let ii=i*2-1
+	sed "$ii a\  out=part$i.$format" <$sid.down > temp.down
+	mv temp.down $sid.down
+done    
+
+aria2c -U firefox -i $sid.down
+
+if [ $format=="mp4" ]; then
+	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$sid - $title.$format" *.$format
+else
+	mencoder -forceidx -oac mp3lame -ovc copy -o "$sid - $title.$format" *.$format
+fi
+mv "$id - $title.$format" ../;cd ..;rm -rf $id
 
 curl --compressed -o "$title.xml" "http://comment.bilibili.tv/dm,$sid"	
 ./xml2ass.py "$title.xml"
