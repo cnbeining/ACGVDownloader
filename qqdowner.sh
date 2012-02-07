@@ -18,7 +18,7 @@
 #      REVISION:  ---
 #===============================================================================
 
-sid=$(echo $1 | sed "s/.*\/v\/b\/\(.*\).html$/\1/")
+sid=$(echo $1 | sed "s/.*cover\/.\/\(.*\).html$/\1/")
 mkdir $sid;cd $sid #create a temp folder to download the video
 curl $1 > temp".html" 
 title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/^\(.*\).$/\1/")
@@ -38,7 +38,7 @@ echo $sid
 	# fi
 # fi
 
-cat $sid".html" | grep -i -e 'http://video.sinaedge.com' -e '58.63.235' > temp.down
+cat $sid".html" | grep -i "222.73.3" > temp.down
 sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e 's/<input type="hidden" name="inf" value="//' temp.down > $sid.down
 rm temp.down 
 
