@@ -39,11 +39,17 @@ echo "Analysing on the video provider web link"
 if [ v=="ykid" ]
 then
 	wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_show/id_"$sid".html"
+	cat $sid".html" | grep -i "flv\|mp4\|h4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
+	if [ ! -s temp.down ]
+	then
+		wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_playlist/"$sid".html"
+		cat $sid".html" | grep -i "flv\|mp4\|h4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
+	fi
 else
 	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
+	cat $sid".html" | grep -i "flv\|mp4\|h4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 fi
 
-cat $sid".html" | grep -i "flv\|mp4\|h4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 cat temp.down | sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e 's/<input type="hidden" name="inf" value="//' | sed '/</d' > $sid.down
 rm temp.down 
 
