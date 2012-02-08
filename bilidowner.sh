@@ -41,7 +41,7 @@ echo $sid
 	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
 
 cat $sid".html" | grep -i "flv\|mp4\|h4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
-sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e 's/<input type="hidden" name="inf" value="//' temp.down > $sid.down
+cat temp.down | sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e 's/<input type="hidden" name="inf" value="//' | sed '/</d' > $sid.down
 rm temp.down 
 
 num=$(wc -l < $sid".down")
@@ -69,9 +69,9 @@ done
 aria2c -U firefox -i $sid.down
 
 if [ $format=="mp4" ]; then
-	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$sid - $title.$format" *.$format
+	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$id - $title.$format" *.$format
 else
-	mencoder -forceidx -oac mp3lame -ovc copy -o "$sid - $title.$format" *.$format
+	mencoder -forceidx -oac mp3lame -ovc copy -o "$id - $title.$format" *.$format
 fi
 mv "$id - $title.$format" ../;cd ..;rm -rf $id
 
