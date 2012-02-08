@@ -15,13 +15,14 @@
 
 # read address from input and get $sid (original id from the source provider), $title and $v(which is used to know where did the video come from) 
 
+./extract_cookies.sh $HOME/.mozilla/firefox/*/cookies.sqlite > /tmp/cookies.txt
 id=$(echo $1 | sed "s/.*\(av[0-9]\{6\}\).*/\1/")
 echo $id
 mkdir $id;cd $id #create a temp folder to download the video
 if [ ! -e $id".html" ]
 then
 	echo "Analysing on the input web link"
-	curl --compressed $1 > $id".html" 
+	curl --cookie /tmp/cookies.txt --compressed $1 > $id".html" 
 #curl $1 |gunzip > index.html
 #curl -v to do debug; bilibili's webpages are compressed as gzip
 fi
@@ -66,7 +67,7 @@ do
 	mv temp.down $sid.down
 done    
 
-aria2c -U firefox -i $sid.down
+aria2c --load-cookies=cookies.sqlite -c -U firefox -i $sid.down
 
 if [ $format=="mp4" ]; then
 	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$id - $title.$format" *.$format
@@ -75,7 +76,7 @@ else
 fi
 mv "$id - $title.$format" ../;cd ..;rm -rf $id
 
-curl --compressed -o "$title.xml" "http://comment.bilibili.tv/dm,$sid"	
-./xml2ass.py "$title.xml"
+curl --compressed -o "$id - $title.xml" "http://comment.bilibili.tv/dm,$sid"	
+./xml2ass.py "$id - $title.xml"
 
 
