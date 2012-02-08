@@ -34,12 +34,14 @@ sid=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z]
 
 flvcda='parse.php?kw='
 # flvcdb='.html&format=high'
-echo $sid
 
-# if [ ! -e $sid".html" ]
-# then
-	echo "Analysing on the video provider web link"
+echo "Analysing on the video provider web link"
+if [ v=="ykid" ]
+then
+	wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_show/id_"$sid".html"
+else
 	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
+fi
 
 cat $sid".html" | grep -i "flv\|mp4\|h4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 cat temp.down | sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e 's/<input type="hidden" name="inf" value="//' | sed '/</d' > $sid.down
