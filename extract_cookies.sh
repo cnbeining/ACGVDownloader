@@ -30,7 +30,7 @@ trap cleanup  SIGHUP SIGINT SIGTERM
 
 # We have to copy cookies.sqlite, because FireFox has a lock on it
 TMPFILE=`mktemp /tmp/cookies.sqlite.XXXXXXXXXX`
-cat $1 >> $TMPFILE
+cat "$1" >> $TMPFILE
 sqlite3 -separator '	' $TMPFILE << EOF
 .mode tabs
 .header off

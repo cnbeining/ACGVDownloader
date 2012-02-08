@@ -14,8 +14,8 @@
 #===============================================================================
 
 # read address from input and get $sid (original id from the source provider), $title and $v(which is used to know where did the video come from) 
-
-./extract_cookies.sh $HOME/.mozilla/firefox/*/cookies.sqlite > /tmp/cookies.txt
+cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
+./extract_cookies.sh "$cookieloc" > /tmp/cookies.txt
 id=$(echo $1 | sed "s/.*\(av[0-9]\{6\}\).*/\1/")
 echo $id
 mkdir $id;cd $id #create a temp folder to download the video
@@ -36,7 +36,7 @@ flvcda='parse.php?kw='
 # flvcdb='.html&format=high'
 
 echo "Analysing on the video provider web link"
-if [ v=="ykid" ]
+if [ "$v" = "ykid" ]
 then
 	wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_show/id_"$sid".html"
 	cat $sid".html" | grep -i "flv\|mp4\|h4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
@@ -75,7 +75,7 @@ do
 	mv temp.down $sid.down
 done    
 
-aria2c --load-cookies=cookies.sqlite -c -U firefox -i $sid.down
+aria2c --load-cookies=/tmp/cookies.txt -c -U firefox -i $sid.down
 
 if [ $format=="mp4" ]; then
 	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$id - $title.$format" *.$format
