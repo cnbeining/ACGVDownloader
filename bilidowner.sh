@@ -84,7 +84,7 @@ else
 fi
 mv "$id - $title.$format" ../;cd ..;rm -rf $id
 
-curl --compressed -o "$id - $title.xml" "http://comment.bilibili.tv/dm,$sid"	
+curl --cookie /tmp/cookies.txt --compressed -o "$id - $title.xml" "http://comment.bilibili.tv/dm,$sid"	
 ./xml2ass.py "$id - $title.xml"
 
 
