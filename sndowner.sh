@@ -73,8 +73,8 @@ do
 done
 echo $comm
 if [ $format=="mp4" ]; then
-	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$sid - $title.$format" *.$format $comm
+	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$sid - $title.$format" $comm
 else
-	mencoder -forceidx -oac mp3lame -ovc copy -o "$sid - $title.$format" *.$format $comm
+	mencoder -forceidx -oac mp3lame -ovc copy -o "$sid - $title.$format" $comm
 fi
 mv "$sid - $title.$format" ../;cd ..;rm -rf $sid
