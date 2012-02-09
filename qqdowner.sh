@@ -66,10 +66,15 @@ done
 
 aria2c  -U firefox -i $sid.down
 
-if [ $format=="mp4" ]; then
-	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$sid - $title.$format" *.$format
-else
-	mencoder -forceidx -oac mp3lame -ovc copy -o "$sid - $title.$format" *.$format
-fi
+export comm=''
+for ((i=1;i<=$num;i++))
+do
+	comm="$comm part$i.$format"
+done
 
+if [ $format=="mp4" ]; then
+	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$sid - $title.$format" *.$format $comm
+else
+	mencoder -forceidx -oac mp3lame -ovc copy -o "$sid - $title.$format" *.$format $comm
+fi
 mv "$sid - $title.$format" ../;cd ..;rm -rf $sid
