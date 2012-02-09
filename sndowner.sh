@@ -66,12 +66,12 @@ do
 done    
 
 aria2c  -U firefox -i $sid.down
-
+comm=''
 for ((i=1;i<=$num;i++))
 do
 	comm="$comm part$i.$format"
 done
-
+echo $comm
 if [ $format=="mp4" ]; then
 	mencoder -ovc copy -oac mp3lame -of lavf -lavfopts format=mp4 -o "$sid - $title.$format" *.$format $comm
 else
