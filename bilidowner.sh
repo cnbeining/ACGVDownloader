@@ -15,6 +15,7 @@
 
 # read address from input and get $sid (original id from the source provider), $title and $v(which is used to know where did the video come from) 
 cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
+ua="Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:10.0) Gecko/20100101 Firefox/10.0" # Your User Agent for the browser, normally it will be OK without changing it but I suggest you to find your own when you got a 403 error from downloading"
 ./extract_cookies.sh "$cookieloc" > /tmp/cookies.txt
 id=$(echo $1 | sed "s/.*\(av[0-9]\{6\}\).*/\1/")
 echo $id
@@ -38,20 +39,25 @@ flvcda='parse.php?kw='
 echo "Analysing on the video provider web link"
 if [ "$v" = "ykid" ]
 then
-	wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_show/id_"$sid".html"
-	cat $sid".html" | grep -i "flv\|mp4\|h4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
+	wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_show/id_"$sid".html&format=super"
+	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 	if [ ! -s temp.down ]
 	then
-		wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_playlist/"$sid".html"
-		cat $sid".html" | grep -i "flv\|mp4\|h4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
+		wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_playlist/"$sid".html&format=super"
+		cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 	fi
+elif [ "$v" = "uid" ]
+then
+	wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://www.tudou.com/programs/view/"$sid"&format=real"
+	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 else
 	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
-	cat $sid".html" | grep -i "flv\|mp4\|h4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
+	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 fi
 
-cat temp.down | sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e 's/<input type="hidden" name="inf" value="//' | sed '/</d' > $sid.down
-rm temp.down 
+cat temp.down | sed  -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e 's/<input type="hidden" name="inf" value="//' -e 's/<U>//' | sed '/</d' > temp2.down
+uniq temp2.down | sed 's/amp;//g' > $sid".down"
+rm temp.down temp2.down
 
 num=$(wc -l < $sid".down")
 if grep -q f4v < $sid".down"
@@ -75,7 +81,7 @@ do
 	mv temp.down $sid.down
 done    
 
-aria2c --load-cookies=/tmp/cookies.txt -c -U firefox -i $sid.down
+aria2c --load-cookies=/tmp/cookies.txt -c --user-agent="$ua" -i $sid.down
 
 export comm=''
 for ((i=1;i<=$num;i++))

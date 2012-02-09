@@ -17,7 +17,7 @@
 #       CREATED:  02/03/2012 06:56:53 PM GMT
 #      REVISION:  ---
 #===============================================================================
-
+ua="Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:10.0) Gecko/20100101 Firefox/10.0" # Your User Agent for the browser, normally it will be OK without changing it but I suggest you to find your own when you got a 403 error from downloading"
 if grep -q v_playlist <<<$1
 then
 	sid=$(echo $1 | sed "s/.*v_playlist\/\(.*\).html/\1/");
@@ -75,7 +75,7 @@ do
 	mv temp.down $sid.down
 done    
 
-aria2c -U firefox -i $sid.down
+aria2c -U "ua" -i $sid.down
 
 export comm=''
 for ((i=1;i<=$num;i++))
