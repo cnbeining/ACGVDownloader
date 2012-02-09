@@ -18,6 +18,7 @@ cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
 id=$(echo $1 | sed "s/.*\(av[0-9]\{6\}\).*/\1/")
 echo $id
 mkdir $id;cd $id #create a temp folder to download the video
+cp ../extract_cookies.sh ./ # so that bilidowner can catch this file
 if [ ! -e $id".html" ]
 then
 	echo "Analysing on the input web link"
