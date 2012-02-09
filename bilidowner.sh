@@ -55,7 +55,7 @@ else
 	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 fi
 
-cat temp.down | sed  -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e 's/<input type="hidden" name="inf" value="//' -e 's/<U>//' | sed '/</d' > temp2.down
+cat temp.down | sed  -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e "/\r/d" -e 's/<U>//' | sed '/</d' > temp2.down
 uniq temp2.down | sed 's/amp;//g' > $sid".down"
 rm temp.down temp2.down
 
