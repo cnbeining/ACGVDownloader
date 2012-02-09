@@ -21,7 +21,7 @@
 pid=$(echo $1 | sed "s/.*id_\([0-9a-zA-Z]*\).html/\1/")
 mkdir $pid;cd $pid; # create a temp folder to download the videos
 curl -o $pid.html $1
-cat $pid".html" | grep "v_playlist\|\/v_show\/id" | sed "s/.*href=\"\(.*\).html.*/\1/" > temp.down
+cat $pid".html" | grep "v_playlist\|\/v_show\/id" | sed "s/.*href=\"\(.*\).html.*/\1/" | sed -e '/share/d' -e '/class/d' > temp.down
 uniq temp.down > $pid.down
 rm temp.down
 
