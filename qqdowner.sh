@@ -39,8 +39,9 @@ echo $sid
 # fi
 
 cat $sid".html" | grep -i "222.73.3" > temp.down
-sed -e '/<U>/d' -e '/<br>/d' -e '/<BR>/d' -e 's/<input type="hidden" name="inf" value="//' temp.down > $sid.down
-rm temp.down 
+cat temp.down | sed  -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e "/\r/d" -e 's/<U>//' | sed '/</d' > temp2.down
+uniq temp2.down | sed 's/amp;//g' > $sid".down"
+rm temp.down temp2.down
 
 num=$(wc -l < $sid".down")
 if grep -q f4v < $sid".down"
