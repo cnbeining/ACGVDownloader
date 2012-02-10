@@ -5,7 +5,7 @@
 #       OPTIONS:  ---
 #  REQUIREMENTS:  ---
 #          BUGS:  ---
-#         NOTES:  Not yet finished...
+#         NOTES:  Finished...
 #        AUTHOR:  Lichi Zhang (tigerdavid), tigerdavidxeon@gmail.com
 #       COMPANY:  University of York, UK
 #       VERSION:  1.0

@@ -15,7 +15,7 @@
 
 # read address from input and get $sid (original id from the source provider), $title and $v(which is used to know where did the video come from) 
 cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
-ua="Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:10.0) Gecko/20100101 Firefox/10.0" # Your User Agent for the browser, normally it will be OK without changing it but I suggest you to find your own when you got a 403 error from downloading"
+ua="Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0" # Your User Agent for the browser, normally it will be OK without changing it but I suggest you to find your own when you got a 403 error from downloading"
 ./extract_cookies.sh "$cookieloc" > /tmp/cookies.txt
 id=$(echo $1 | sed "s/.*\(av[0-9]\{5,6\}\).*/\1/")
 echo $id
