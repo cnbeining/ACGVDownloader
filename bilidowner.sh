@@ -15,7 +15,7 @@
 
 # read address from input and get $sid (original id from the source provider), $title and $v(which is used to know where did the video come from) 
 cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
-ua="Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0" # Your User Agent for the browser, normally it will be OK without changing it but I suggest you to find your own when you got a 403 error from downloading"
+ua="Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:10.0) Gecko/20100101 Firefox/10.0" # Your User Agent for the browser, normally it will be OK without changing it but I suggest you to find your own when you got a 403 error from downloading"
 ./extract_cookies.sh "$cookieloc" > /tmp/cookies.txt
 id=$(echo $1 | sed "s/.*\(av[0-9]\{5,6\}\).*/\1/")
 echo $id
@@ -46,10 +46,14 @@ then
 		wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_playlist/"$sid".html&format=super"
 		cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 	fi
-elif [ "$v" = "uid" ]
-then
-	wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://www.tudou.com/programs/view/"$sid"&format=real"
-	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
+# elif [ "$v" = "uid" ]
+# then
+	# curl --compressed http://www.tudou.com/programs/view/$sid > $sid".html"
+	# flvcda='http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it='
+	# tuid=$(grep -i "iid =" < $sid".html" | sed "s/\,iid = \([0-9]*\)$/\1/")
+	# wget --output-document=$sid.xml "$flvcda$tuid"
+	# cat $sid".xml" | sed "s/>/>\n/g" | sed "s/</\n</g" | grep -i 'http' > temp.down
+
 else
 	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
 	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
@@ -81,7 +85,7 @@ do
 	mv temp.down $sid.down
 done    
 
-aria2c --load-cookies=/tmp/cookies.txt -c --user-agent="$ua" -i $sid.down
+aria2c -x5 --load-cookies=/tmp/cookies.txt -c --user-agent="$ua" -i $sid.down
 
 comm=''
 for ((i=1;i<=$num;i++))
@@ -90,9 +94,9 @@ do
 done
 echo $comm
 if [ $format=="mp4" ]; then
-	mencoder -ovc copy -oac mp3lame -lameopts cbr:br=128 -of lavf -lavfopts format=mp4 -o "$id - $title.$format" $comm
+	mencoder -mc 0 -ovc copy -oac mp3lame -lameopts cbr:br=128 -of lavf -lavfopts format=mp4 -o "$id - $title.$format" $comm
 else
-	mencoder -forceidx -oac mp3lame -lameopts cbr:br=128 -ovc copy -o "$id - $title.$format" $comm
+	mencoder -mc 0 -forceidx -oac mp3lame -lameopts cbr:br=128 -ovc copy -o "$id - $title.$format" $comm
 fi
 mv "$id - $title.$format" ../;cd ..;rm -rf $id
 
