@@ -31,7 +31,7 @@ class Subtitle():
 
     def __init__(self, index, attributes, text,
                  video_width=1280, video_height=768,
-                 default_font_size=36, line_count=6):
+                 default_font_size=60, line_count=20):
 
         self.index = index # 字幕序号
         self.attributes = attributes # xml 的属性
