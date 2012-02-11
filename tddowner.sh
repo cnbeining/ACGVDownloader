@@ -19,7 +19,7 @@
 #===============================================================================
 sid=$(echo $1 | sed "s/.*view\/\([0-9a-zA-Z-]*\).*/\1/")
 mkdir $sid;cd $sid #create a temp folder to download the video
-curl --compressed $1 > $sid".html" 
+curl --compressed $1 | iconv -f "gbk" -t "utf-8" > $sid".html" 
 title=$(cat $sid".html"  | grep "<title>" | sed -e 's/</\n</g' -e 's/>/>\n</g' | sed -n '3p')
 flvcda='http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it='
 tuid=$(grep -i "iid =" < $sid".html" | sed "s/\,iid = \([0-9]*\)$/\1/")
