@@ -48,11 +48,13 @@ then
 	fi
 elif [ "$v" = "uid" ]
 then
-	curl --compressed http://www.tudou.com/programs/view/$sid > $sid".html"
-	flvcda='http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it='
-	tuid=$(grep -i "iid =" < $sid".html" | sed "s/\,iid = \([0-9]*\)$/\1/")
-	wget --output-document=$sid.xml "$flvcda$tuid"
-	cat $sid".xml" | sed "s/>/>\n/g" | sed "s/</\n</g" | grep -i 'http' | sed -n '1p' > temp.down
+	wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://www.tudou.com/programs/view/"$sid".html&format=real"
+	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
+# 	curl --compressed http://www.tudou.com/programs/view/$sid > $sid".html"
+# 	flvcda='http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it='
+# 	tuid=$(grep -i "iid =" < $sid".html" | sed "s/\,iid = \([0-9]*\)$/\1/")
+# 	wget --output-document=$sid.xml "$flvcda$tuid"
+# 	cat $sid".xml" | sed "s/>/>\n/g" | sed "s/</\n</g" | grep -i 'http' | sed -n '1p' > temp.down
 
 else
 	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
