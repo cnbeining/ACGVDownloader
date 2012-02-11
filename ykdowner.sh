@@ -71,12 +71,12 @@ fi
 
 for ((i=1;i<=$num;i++))
 do
-	let ii=i*2-1
-	sed "$ii a\  out=part$i.$format" <$sid.down > temp.down
+	let ii=i*3-2
+	sed "$ii a\  out=part$i.$format\n  user-agent=$ua" <$sid.down > temp.down
 	mv temp.down $sid.down
 done    
 
-aria2c -U "ua" -i $sid.down
+aria2c -i $sid.down
 
 comm=''
 for ((i=1;i<=$num;i++))

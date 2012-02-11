@@ -65,7 +65,7 @@ do
 	mv temp.down $sid.down
 done    
 
-aria2c  -U firefox -i $sid.down
+aria2c -i $sid.down
 comm=''
 for ((i=1;i<=$num;i++))
 do

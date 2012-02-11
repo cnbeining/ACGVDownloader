@@ -17,11 +17,10 @@
 #       CREATED:  02/03/2012 06:56:53 PM GMT
 #      REVISION:  ---
 #===============================================================================
-ua="Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:10.0) Gecko/20100101 Firefox/10.0" # Your User Agent for the browser, normally it will be OK without changing it but I suggest you to find your own when you got a 403 error from downloading"
-sid=$(echo $1 | sed "s/.*view\/\(.*\)$/\1/")
+sid=$(echo $1 | sed "s/.*view\/\([0-9a-zA-Z]*\).*/\1/")
 mkdir $sid;cd $sid #create a temp folder to download the video
 curl --compressed $1 > $sid".html" 
-title=$(cat $sid".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/^\(.*\).$/\1/")
+title=$(cat $sid".html"  | grep "<title>" | sed -e 's/</\n</g' -e 's/>/>\n</g' | sed -n '3p')
 flvcda='http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it='
 tuid=$(grep -i "iid =" < $sid".html" | sed "s/\,iid = \([0-9]*\)$/\1/")
 echo $sid
@@ -58,7 +57,6 @@ then
 	format=flv
 fi
 
-
-wget --output-document="$sid - $title.$format" --user-agent="$ua" $url 
+wget --output-document="$sid - $title.$format" $url 
 
 mv "$sid - $title.$format" ../;cd ..;rm -rf $sid
