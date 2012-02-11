@@ -17,7 +17,7 @@
 #       CREATED:  02/03/2012 06:56:53 PM GMT
 #      REVISION:  ---
 #===============================================================================
-sid=$(echo $1 | sed "s/.*view\/\([0-9a-zA-Z]*\).*/\1/")
+sid=$(echo $1 | sed "s/.*view\/\([0-9a-zA-Z-]*\).*/\1/")
 mkdir $sid;cd $sid #create a temp folder to download the video
 curl --compressed $1 > $sid".html" 
 title=$(cat $sid".html"  | grep "<title>" | sed -e 's/</\n</g' -e 's/>/>\n</g' | sed -n '3p')
