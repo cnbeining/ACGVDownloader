@@ -20,8 +20,8 @@ PlayResX: %s
 PlayResY: %s
 
 [V4+ Styles]
-Format: Name, Fontname, Fontsize, PrimaryColour, BackColour, OutlineColour, Bold, Italic, Alignment, BorderStyle, Outline, Shadow, MarginL, MarginR, MarginV
-Style: NicoDefault,WenQuanYi Micro Hei,%s,&H00ffffff,&H00000000,&H00000000,0,0,2,1,1,0,20,20,20"""
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, Bold, Italic, Alignment, BorderStyle, Outline, Shadow, MarginL, MarginR, MarginV
+Style: NicoDefault,WenQuanYi Micro Hei,%s,&H00ffffff,&H00000000,0,0,2,1,1,0,20,20,20"""
 
 class Subtitle():
 
