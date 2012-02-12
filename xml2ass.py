@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 # ----------------------------------------------------------------------------
-#     Name: bilibili
+#     Name: xml2ass (originally bilibili)
 #     Desc: 下载转换 bilibili.tv 的弹幕字幕为 ass 字幕
-#    Usage: bilibili video_url|xml_file [ResX:ResY:FontSize:LineCount]
+#    Usage: xml2ass video_url|xml_file [ResX:ResY:FontSize:LineCount]
 # ----------------------------------------------------------------------------
 
 import sys
@@ -103,7 +103,7 @@ class Subtitle():
             return (x1, y, x2 , y)
         else:
             x = self.video_width / 2 
-            y = 1
+	    y = (self.index % self.line_count) * self.font_size # something needs to be done here, originally set to be 1 here
             return (x, y, x, y)
 
     def init_styled_text(self, ):
