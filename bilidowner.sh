@@ -99,7 +99,7 @@ do
 	mv temp.down $sid.down
 done    
 
-aria2c -x10 -c -i $sid.down
+aria2c  -c -i $sid.down
 comm=''
 for ((i=1;i<=$num;i++))
 do

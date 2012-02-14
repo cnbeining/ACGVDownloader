@@ -2,7 +2,7 @@ This is the bash scripts used for downloading videos from Chinese online video r
 I will add more features in the future, but everything depends on whether I still have time to do it...
 
 Need the following packages:
-aria2 - A highly advanced command line downloader which I use it to download multiple clips from the video address, it can do parallel downloading and thus make it much faster.
+aria2 - A highly advanced command line downloader which I use it to download multiple clips from the video address, it can do parallel downloading and thus make it much faster. I would suggest to install aria2c using the package I uploaded here as it has been patched and can avoid the problem of "invalid header range" when downloading some of the videos.
 mencoder - Used to merge the splitted clips together.
 etc - I don't know if there are any other packages missing, please let me know if you meet the problems for that.
 
