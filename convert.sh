@@ -25,3 +25,4 @@ do
 	fn=$(sed -n "$i"'p' < temp.list);
 	python xml2ass.py "$fn"
 done
+rm temp.list

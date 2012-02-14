@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 # ----------------------------------------------------------------------------
-#     Name: xml2ass (originally bilibili)
-#     Desc: 下载转换 bilibili.tv 的弹幕字幕为 ass 字幕
-#    Usage: xml2ass video_url|xml_file [ResX:ResY:FontSize:LineCount]
+#     Name: xml2ssa (originally bilibili)
+#     Desc: 下载转换 bilibili.tv 的弹幕字幕为 ssa 字幕
+#    Usage: xml2ssa video_url|xml_file [ResX:ResY:FontSize:LineCount]
 # ----------------------------------------------------------------------------
 
 import sys
@@ -127,7 +127,7 @@ class Bilibili:
                  video_width=1280, video_height=768,
                  default_font_size=40, line_count=20):
         self.xml_filename = xml_filename # xml 文件名
-        self.out_filename = xml_filename.replace('.xml', '.ass') # 输出 ass 文件名
+        self.out_filename = xml_filename.replace('.xml', '.ssa') # 输出 ssa 文件名
 
         self.video_width = video_width # 视频宽度
         self.video_height = video_height # 视频高度

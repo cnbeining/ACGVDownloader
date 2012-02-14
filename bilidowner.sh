@@ -13,7 +13,7 @@
 #      REVISION:  ---
 #===============================================================================
 # Change this user agent information to what your browser has in below if you meet the 403 error while downloading
-ua="Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:10.0) Gecko/20100101 Firefox/10.0"
+ua="Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0"
 # read address from input and get $sid (original id from the source provider), $title and $v(which is used to know where did the video come from) 
 cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
 ./extract_cookies.sh "$cookieloc" > /tmp/cookies.txt
@@ -32,7 +32,11 @@ title=$(cat $id".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/titl
 
 v=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z]*\).*/\1/")
 sid=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z-]*\).*/\2/")
-
+if [ -z $v ]
+then
+	v=qid;
+	sid=$(grep "qid" $id".html" | sed "s/.*qid=\(.*\)\" scrolling.*/\1/")
+fi
 flvcda='parse.php?kw='
 # flvcdb='.html&format=high'
 
@@ -55,7 +59,14 @@ then
 # 	tuid=$(grep -i "iid =" < $sid".html" | sed "s/\,iid = \([0-9]*\)$/\1/")
 # 	wget --output-document=$sid.xml "$flvcda$tuid"
 # 	cat $sid".xml" | sed "s/>/>\n/g" | sed "s/</\n</g" | grep -i 'http' | sed -n '1p' > temp.down
-
+elif [ "$v" = "vid" ]
+then
+	wget --output-document=$sid.xml 'http://v.iask.com/v_play.php?vid='$sid
+	cat $sid".xml" | grep 'http' | sed "s/.*CDATA\[\(.*\)\]\].*/\1/" > temp.down
+elif [ "$v" = "qid" ]
+then
+	wget --output-document=$sid.html "http://flvcd.com/"$flvcda'http://v.qq.com/video/play.html?vid='$sid
+	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 else
 	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
 	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
@@ -88,7 +99,7 @@ do
 	mv temp.down $sid.down
 done    
 
-aria2c -c -i $sid.down
+aria2c -x10 -c -i $sid.down
 comm=''
 for ((i=1;i<=$num;i++))
 do
