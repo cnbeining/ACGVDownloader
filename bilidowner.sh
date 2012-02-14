@@ -100,6 +100,15 @@ do
 done    
 
 aria2c -x10 -c -i $sid.down
+res=$?
+echo $res
+until [ $res -eq 0 -o $res -eq 7 ]; do
+	echo Something wrong while downloading, try resuming now.....
+	aria2c -x10 -c -i $sid.down
+	res=$?
+	echo $res
+done
+
 comm=''
 for ((i=1;i<=$num;i++))
 do
