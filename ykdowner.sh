@@ -31,6 +31,7 @@ fi
 mkdir $sid;cd $sid #create a temp folder to download the video
 curl $1  > temp".html"
 title=$(cat temp".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/^\(.*\).$/\1/")
+echo $title
 rm temp.html
 flvcda='parse.php?kw='
 # flvcdb='.html&format=high'

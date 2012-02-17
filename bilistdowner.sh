@@ -12,7 +12,7 @@
 #       CREATED:  01/28/2012 02:00:37 PM GMT
 #      REVISION:  ---
 #===============================================================================
-
+# num=$(wc -l < av150607.list);for ((i=5;i<=$num;i++)); do ../bilidowner.sh http://www.bilibili.tv/video/av150607/index_$i.html; done
 cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
 ./extract_cookies.sh "$cookieloc" > /tmp/cookies.txt
 id=$(echo $1 | sed "s/.*\(av[0-9]\{5,6\}\).*/\1/")

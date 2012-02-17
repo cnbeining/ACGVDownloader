@@ -12,6 +12,7 @@
 #       CREATED:  02/09/2012 02:00:37 PM GMT
 #      REVISION:  ---
 #===============================================================================
+# num=$(wc -l < $id".list");for ((i=7;i<=$num;i++)); do url=$(sed -n "$i"'p' < richang.list);../bilidowner.sh $url;done
 
 cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
 ./extract_cookies.sh "$cookieloc" > /tmp/cookies.txt
