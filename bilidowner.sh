@@ -65,8 +65,8 @@ then
 	cat $sid".xml" | grep 'http' | sed "s/.*CDATA\[\(.*\)\]\].*/\1/" > temp.down
 elif [ "$v" = "qid" ]
 then
-	wget --output-document=$sid.html "http://flvcd.com/"$flvcda'http://v.qq.com/video/play.html?vid='$sid
-	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
+	host="header=Host:v2.bilibili.tv\n"
+	echo "http://videotfs.tc.qq.com:80/"$sid".flv?channel=vhot2&sdtfrom=v2&r=60&rfc=v0" > temp.down
 else
 	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
 	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
@@ -94,8 +94,8 @@ fi
 for ((i=1;i<=$num;i++))
 do
 	let ii=i*10-9
-# All these I made below are for that stupid tudou......
-	sed "$ii a\  referer = http://www.google.com\n  load-cookies=/tmp/cookies.txt\n  out=part$i.$format\n  user-agent=$ua\n   header=Accept:text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n   header=Accept-Language: en-us,en;q=0.5\n  header=Accept-Encoding: gzip,deflate\n   header=Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n   header=Keep-Alive: 300" <$sid.down > temp.down
+# All these I made below are for that stupid tudou and qq......
+	sed "$ii a\ $host  load-cookies=/tmp/cookies.txt\n  out=part$i.$format\n  user-agent=$ua\n   header=Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\n   header=Accept-Language:en-gb,en;q=0.5\n  header=Accept-Encoding: gzip,deflate\n   header=Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n   header=Connection:keep-alive" <$sid.down > temp.down
 	mv temp.down $sid.down
 done    
 
