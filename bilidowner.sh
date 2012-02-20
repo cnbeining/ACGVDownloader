@@ -106,7 +106,7 @@ do
 	comm="$comm part$i.$format"
 done
 echo $comm
-title=$(echo $title | sed 's_/_\/_g')
+# title=$(echo $title | sed 's_/_\/_g')
 if [ $format=="mp4" ]; then
 	mencoder -mc 0 -ovc copy -oac mp3lame -lameopts cbr:br=128 -of lavf -lavfopts format=mp4 -o "$id - $title.$format" $comm
 else
