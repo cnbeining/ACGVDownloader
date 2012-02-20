@@ -13,7 +13,7 @@
 #      REVISION:  ---
 #===============================================================================
 # Change this user agent information to what your browser has in below if you meet the 403 error while downloading
-ua="Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0"
+ua="Mozilla/5.0 (X11; Linux x86_64; rv:10.0.2) Gecko/20100101 Firefox/10.0.2"
 # read address from input and get $sid (original id from the source provider), $title and $v(which is used to know where did the video come from) 
 cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
 ./extract_cookies.sh "$cookieloc" > /tmp/cookies.txt
@@ -43,16 +43,16 @@ flvcda='parse.php?kw='
 echo "Analysing on the video provider web link"
 if [ "$v" = "ykid" ]
 then
-	wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_show/id_"$sid".html&format=super"
+	aria2c --out=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_show/id_"$sid".html&format=super"
 	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 	if [ ! -s temp.down ]
 	then
-		wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://v.youku.com/v_playlist/"$sid".html&format=super"
+		aria2c --out=$sid.html  "http://flvcd.com/"$flvcda"http://v.youku.com/v_playlist/"$sid".html&format=super"
 		cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 	fi
 elif [ "$v" = "uid" ]
 then
-	wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://www.tudou.com/programs/view/"$sid".html&format=real"
+	aria2c --out=$sid.html "http://flvcd.com/"$flvcda"http://www.tudou.com/programs/view/"$sid".html&format=real"
 	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 # 	curl --compressed http://www.tudou.com/programs/view/$sid > $sid".html"
 # 	flvcda='http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it='
@@ -61,14 +61,14 @@ then
 # 	cat $sid".xml" | sed "s/>/>\n/g" | sed "s/</\n</g" | grep -i 'http' | sed -n '1p' > temp.down
 elif [ "$v" = "vid" ]
 then
-	wget --output-document=$sid.xml 'http://v.iask.com/v_play.php?vid='$sid
+	aria2c --out=$sid.xml  'http://v.iask.com/v_play.php?vid='$sid
 	cat $sid".xml" | grep 'http' | sed "s/.*CDATA\[\(.*\)\]\].*/\1/" > temp.down
 elif [ "$v" = "qid" ]
 then
 	host="header=Host:v2.bilibili.tv"
 	echo "http://videotfs.tc.qq.com:80/"$sid".flv?channel=vhot2&sdtfrom=v2&r=60&rfc=v0" > temp.down
 else
-	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
+	aria2c --out=$sid.html  "http://flvcd.com/$flvcda$1"
 	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 fi
 
@@ -99,13 +99,14 @@ do
 	mv temp.down $sid.down
 done    
 
-aria2c -x10 -c -i $sid.down
+aria2c -i $sid.down
 comm=''
 for ((i=1;i<=$num;i++))
 do
 	comm="$comm part$i.$format"
 done
 echo $comm
+title=$(echo $title | sed 's_/_\/_g')
 if [ $format=="mp4" ]; then
 	mencoder -mc 0 -ovc copy -oac mp3lame -lameopts cbr:br=128 -of lavf -lavfopts format=mp4 -o "$id - $title.$format" $comm
 else
