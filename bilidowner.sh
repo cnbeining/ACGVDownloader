@@ -28,7 +28,7 @@ then
 #curl -v to do debug; bilibili's webpages are compressed as gzip
 fi
 
-title=$(cat $id".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed "s/^\(.*\).$/\1/")
+title=$(cat $id".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed -e "s/^\(.*\).$/\1/" -e "s_/_\/_g")
 echo $title
 v=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z]*\).*/\1/")
 sid=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z-]*\).*/\2/")
