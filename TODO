@@ -5,3 +5,4 @@ Following are the list which I plan to implement in the future:
 	- build a danmaku's filter
 	- a script that can download all chinese online videos that shuoshu supports
 	- when the error of "invalid header range" is occurred the script will return the message and stop downloading, all the downloaded parts are deleted automatically
+	- update danmaku in xml files
