@@ -15,7 +15,7 @@
 # num=$(wc -l < av150607.list);for ((i=5;i<=$num;i++)); do ../bilidowner.sh http://www.bilibili.tv/video/av150607/index_$i.html; done
 cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
 ./extract_cookies.sh "$cookieloc" > /tmp/cookies.txt
-id=$(echo $1 | sed "s/.*\(av[0-9]\{5,6\}\).*/\1/")
+id=$(echo $1 | sed "s/.*\(av[0-9]\{3,6\}\).*/\1/")
 echo $id
 mkdir $id;cd $id #create a temp folder to download the video
 cp ../extract_cookies.sh ./ # so that bilidowner can catch this file

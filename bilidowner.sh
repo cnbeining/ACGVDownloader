@@ -17,7 +17,7 @@ ua="Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0"
 # read address from input and get $sid (original id from the source provider), $title and $v(which is used to know where did the video come from) 
 cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
 ./extract_cookies.sh "$cookieloc" > /tmp/cookies.txt
-id=$(echo $1 | sed "s/.*\(av[0-9]\{5,6\}\).*/\1/")
+id=$(echo $1 | sed "s/.*\(av[0-9]\{3,6\}\).*/\1/")
 echo $id
 mkdir $id;cd $id #create a temp folder to download the video
 if [ ! -e $id".html" ]
@@ -52,16 +52,16 @@ then
 	fi
 elif [ "$v" = "uid" ]
 then
-	wget --output-document=$sid.html "http://flvcd.com/"$flvcda"http://www.tudou.com/programs/view/"$sid".html&format=real"
-	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
-# 	curl --compressed http://www.tudou.com/programs/view/$sid > $sid".html"
-# 	flvcda='http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it='
-# 	tuid=$(grep -i "iid =" < $sid".html" | sed "s/\,iid = \([0-9]*\)$/\1/")
-# 	wget --output-document=$sid.xml "$flvcda$tuid"
-# 	cat $sid".xml" | sed "s/>/>\n/g" | sed "s/</\n</g" | grep -i 'http' | sed -n '1p' > temp.down
+#	aria2c --out=$sid.html "http://flvcd.com/"$flvcda"http://www.tudou.com/programs/view/"$sid".html&format=real"
+#	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
+ 	curl --compressed http://www.tudou.com/programs/view/$sid > $sid".html"
+ 	flvcda='http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it='
+ 	tuid=$(grep -i "iid =" < $sid".html" | sed "s/\,iid = \([0-9]*\)$/\1/")
+ 	wget --output-document=$sid.xml "$flvcda$tuid"
+ 	cat $sid".xml" | sed "s/>/>\n/g" | sed "s/</\n</g" | grep -i 'http' | sed -n '1p' > temp.down
 elif [ "$v" = "vid" ]
 then
-	wget --output-document=$sid.xml 'http://v.iask.com/v_play.php?vid='$sid
+	aria2c --out=$sid.xml 'http://v.iask.com/v_play.php?vid='$sid
 	cat $sid".xml" | grep 'http' | sed "s/.*CDATA\[\(.*\)\]\].*/\1/" > temp.down
 elif [ "$v" = "qid" ]
 then
