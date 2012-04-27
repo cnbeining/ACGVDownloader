@@ -120,9 +120,9 @@ do
 done
 echo $comm
 if [ $format=="mp4" ]; then
-	mencoder -mc 0 -ovc copy -oac faac -lameopts cbr:br=128 -of lavf -lavfopts format=mp4 -o "$id - $title.$format" $comm
+	mencoder -mc 0 -ovc copy -oac mp3lame -lameopts cbr:br=128 -of lavf -lavfopts format=mp4 -o "$id - $title.$format" $comm
 else
-	mencoder -mc 0 -forceidx -oac faac -lameopts cbr:br=128 -ovc copy -o "$id - $title.$format" $comm
+	mencoder -mc 0 -forceidx -oac mp3lame -lameopts cbr:br=128 -ovc copy -o "$id - $title.$format" $comm
 fi
 ffmpeg -i "$id - $title.$format" -threads 0 -acodec libfaac -ab 128k -vcodec copy -ar 48000 -f mp4 "$id - $title.mp4"
 mv "$id - $title.$format" ../;cd ..;rm -rf $id
