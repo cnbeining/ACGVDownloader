@@ -24,8 +24,8 @@ if [ ! -e $id".html" ]
 then
 	echo "Analysing on the input web link"
 	curl --cookie /tmp/cookies.txt --compressed $1 > $id".html" 
-#curl $1 |gunzip > index.html
-#curl -v to do debug; bilibili's webpages are compressed as gzip
+	#curl $1 |gunzip > index.html
+	#curl -v to do debug; bilibili's webpages are compressed as gzip
 fi
 
 title=$(cat $id".html"  | grep "<title>.*<.title>" | sed "s/<title>\(.*\)<\/title>/\1/" | sed -e 's/^\(.*\).$/\1/' -e 's_/_ _g')
@@ -34,8 +34,9 @@ v=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z]*\
 sid=$(grep "play.swf" $id".html" | sed "s/.*flashvars=.\([a-z]*\)\=\([0-9a-zA-Z_-]*\).*/\2/")
 if [ -z $v ]
 then
-	v=qid;
-	sid=$(grep "qid" $id".html" | sed "s/.*qid=\(.*\)\" scrolling.*/\1/")
+	string=$(grep 'secure' $id'.html' | sed "s_.*https://secure.bilibili.tv/secure,\(.*\)\" scrolling.*_\1_")
+	v=$(echo $string | sed "s/^\([a-z]*\)=.*/\1/")
+	sid=$(echo $string | sed "s/^\([a-z]*\)=\(.*\)$/\2/" | sed 's/=/\//')
 fi
 flvcda='parse.php?kw='
 # flvcdb='.html&format=high'
@@ -52,29 +53,41 @@ then
 	fi
 elif [ "$v" = "uid" ]
 then
-#	aria2c --out=$sid.html "http://flvcd.com/"$flvcda"http://www.tudou.com/programs/view/"$sid".html&format=real"
-#	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
- 	curl --compressed http://www.tudou.com/programs/view/$sid > $sid".html"
- 	flvcda='http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it='
- 	tuid=$(grep -i "iid =" < $sid".html" | sed "s/\,iid = \([0-9]*\)$/\1/")
- 	wget --output-document=$sid.xml "$flvcda$tuid"
- 	cat $sid".xml" | sed "s/>/>\n/g" | sed "s/</\n</g" | grep -i 'http' | sed -n '1p' > temp.down
+	#	aria2c --out=$sid.html "http://flvcd.com/"$flvcda"http://www.tudou.com/programs/view/"$sid".html&format=real"
+	#	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
+	curl --compressed http://www.tudou.com/programs/view/$sid > $sid".html"
+	flvcda='http://v2.tudou.com/v?st=1%2C2%2C3%2C4%2C99&it='
+	tuid=$(grep -i "iid =" < $sid".html" | sed "s/\,iid = \([0-9]*\)$/\1/")
+	wget --output-document=$sid.xml "$flvcda$tuid"
+	cat $sid".xml" | sed "s/>/>\n/g" | sed "s/</\n</g" | grep -i 'http' | sed -n '1p' > temp.down
 elif [ "$v" = "vid" ]
 then
 	aria2c --out=$sid.xml 'http://v.iask.com/v_play.php?vid='$sid
 	cat $sid".xml" | grep 'http' | sed "s/.*CDATA\[\(.*\)\]\].*/\1/" > temp.down
+elif [ "$v" = "rid" ]
+then
+	rid=$sid
+	sid='6cn'
+	curl --compressed 'http://6.cn/v72.php?vid='$rid > $sid.xml
+	roomid=$(cat "$sid.xml" | grep "<id>" | sed "s/<id>\(.*\)<\/id>/\1/")
+	curl "'http://flvcd.com/'$flvcda'http://www.6cn/watch/'$roomid'.html&flag=&format='" > $sid.html
+	cat $sid.html | sed "s_http://barcelona.6rooms.com_http://nantes.6rooms.com_g" > temp.down
+	#cat "6cn.xml" | grep "<file>" | sed "s/<file>\(.*\)<\/file>/\1/" | sed "s_http://barcelona.6rooms.com_http://nantes.6rooms.com_" > $sid.down
 elif [ "$v" = "qid" ]
 then
 	host="header=Host:v2.bilibili.tv"
-	echo "http://videotfs.tc.qq.com:80/"$sid".flv?channel=vhot2&sdtfrom=v2&r=60&rfc=v0" > temp.down
+	echo "http://videotfs.tc.qq.com:80/"$sid".flv?channel=vhot2&sdtfrom=v2&r=60&rfc=v0" > $sid.down
 else
 	wget --output-document=$sid.html "http://flvcd.com/$flvcda$1"
 	cat $sid".html" | grep -i "flv\|mp4\|f4v\|hlv" | grep -v 'flvcd\|FLVCD' > temp.down
 fi
 
-cat temp.down | sed  -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e "/\r/d" -e 's/<U>//' | sed '/</d' > temp2.down
-uniq temp2.down | sed 's/amp;//g' > $sid".down"
-rm temp.down temp2.down
+if [ ! -e $sid.down ]
+then
+	cat temp.down | sed  -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e "/\r/d" -e 's/<U>//' | sed '/</d' > temp2.down
+	uniq temp2.down | sed 's/amp;//g' > $sid".down"
+	rm temp.down temp2.down
+fi
 
 num=$(wc -l < $sid".down")
 if grep -q f4v < $sid".down"
@@ -94,7 +107,7 @@ fi
 for ((i=1;i<=$num;i++))
 do
 	let ii=i*10-9
-# All these I made below are for that stupid tudou and qq......
+	# All these I made below are for that stupid tudou and qq......
 	sed "$ii a\ $host\n  load-cookies=/tmp/cookies.txt\n  out=part$i.$format\n  user-agent=$ua\n   header=Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\n   header=Accept-Language:en-gb,en;q=0.5\n  header=Accept-Encoding: gzip,deflate\n   header=Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n   header=Connection:keep-alive" <$sid.down > temp.down
 	mv temp.down $sid.down
 done    
@@ -111,11 +124,14 @@ if [ $format=="mp4" ]; then
 else
 	mencoder -mc 0 -forceidx -oac mp3lame -lameopts cbr:br=128 -ovc copy -o "$id - $title.$format" $comm
 fi
+ffmpeg -i "$id - $title.$format" -threads 0 -acodec libfaac -ab 128k -vcodec copy -ar 48000 -f mp4 "$id - $title.mp4"
 mv "$id - $title.$format" ../;cd ..;rm -rf $id
+
+if [ "$rid" ]; then sid=$(echo $rid | sed '_/_=_');fi
 
 curl --cookie /tmp/cookies.txt --compressed -o "$id - $title.xml" "http://comment.bilibili.tv/dm,$sid"	
 
-source ~/tigerdav/ENV/bin/activate # to start the virtualenv, comment this if you don't need to (or just ignore this...)
+source /usr/tigerdav/tigerdav/ENV/bin/activate # start the virtualenv, comment this if you don't need to (or just ignore this...)
 python xml2ass.py "$id - $title.xml" 
 
 
