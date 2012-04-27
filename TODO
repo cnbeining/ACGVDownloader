@@ -1,7 +1,7 @@
 Following are the list which I plan to implement in the future:
 
 	- make the output texts colorful, the important content can thus be highlighted
-	- adjust the danmaku's format
+	- adjust the danmaku's format in xml2ass, and delete the special characters in xml files automatically before the conversion
 	- build a danmaku's filter
 	- a script that can download all chinese online videos that shuoshu supports
 	- when the error of "invalid header range" is occurred the script will return the message and stop downloading, all the downloaded parts are deleted automatically

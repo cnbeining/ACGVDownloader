@@ -31,7 +31,7 @@ class Subtitle():
 
     def __init__(self, index, attributes, text,
                  video_width=1280, video_height=768,
-                 default_font_size=40, line_count=20):
+                 default_font_size=40, line_count=19):
 
         self.index = index # 字幕序号
         self.attributes = attributes # xml 的属性
@@ -125,7 +125,7 @@ class Bilibili:
 
     def __init__(self, xml_filename,
                  video_width=1280, video_height=768,
-                 default_font_size=40, line_count=20):
+                 default_font_size=40, line_count=19):
         self.xml_filename = xml_filename # xml 文件名
         self.out_filename = xml_filename.replace('.xml', '.ssa') # 输出 ssa 文件名
 

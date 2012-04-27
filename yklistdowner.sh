@@ -18,6 +18,7 @@
 #      REVISION:  ---
 #===============================================================================
 
+# num=$(wc -l < XMTk3Mzk3MjUy.down);for ((i=8;i<=$num;i++)); do url=$(sed -n "$i"'p' < XMTk3Mzk3MjUy.down).html;../ykdowner.sh $url;done
 pid=$(echo $1 | sed "s/.*id_\(.*\).html/\1/")
 mkdir $pid;cd $pid; # create a temp folder to download the videos
 curl -o $pid.html $1
