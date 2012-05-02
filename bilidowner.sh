@@ -124,8 +124,8 @@ if [ $format=="mp4" ]; then
 else
 	mencoder -mc 0 -forceidx -oac mp3lame -lameopts cbr:br=128 -ovc copy -o "$id - $title.$format" $comm
 fi
-ffmpeg -i "$id - $title.$format" -threads 0 -acodec libfaac -ab 128k -vcodec copy -ar 48000 -f mp4 "$id - $title.mp4"
-mv "$id - $title.mp4" ../;cd ..;rm -rf $id
+ffmpeg -i "$id - $title.$format" -threads 0 -acodec libfaac -ab 128k -vcodec copy -ar 48000 -f mp4 "temp.mp4"
+mv temp.mp4 ../"$id - $title.mp4";cd ..;rm -rf $id
 
 if [ "$rid" ]; then sid=$(echo $rid | sed '_/_=_');fi
 
