@@ -113,19 +113,17 @@ do
 done    
 
 aria2c -x10 -c -i $sid.down
-comm=''
-for ((i=1;i<=$num;i++))
+ffmpeg -i part1.$format -vcodec copy -acodec copy part1.mp4
+comm='-add part1.mp4'
+for ((i=2;i<=$num;i++))
 do
-	comm="$comm part$i.$format"
+	ffmpeg -i part$i.$format -vcodec copy -acodec copy part$i.mp4
+	comm="$comm -cat part$i.mp4"
 done
 echo $comm
-if [ $format=="mp4" ]; then
-	mencoder -mc 0 -ovc copy -oac mp3lame -lameopts cbr:br=128 -of lavf -lavfopts format=mp4 -o "$id - $title.$format" $comm
-else
-	mencoder -mc 0 -forceidx -oac mp3lame -lameopts cbr:br=128 -ovc copy -o "$id - $title.$format" $comm
-fi
-ffmpeg -i "$id - $title.$format" -threads 0 -acodec libfaac -ab 128k -vcodec libx264 -crf 21 -f mp4 "temp.mp4"
-mv temp.mp4 ../"$id - $title.mp4";cd ..;rm -rf $id
+MP4Box $comm "$id - $title.mp4"
+
+mv "$id - $title.mp4" ../;cd ..;rm -rf $id
 
 if [ "$rid" ]; then sid=$(echo $rid | sed '_/_=_');fi
 
