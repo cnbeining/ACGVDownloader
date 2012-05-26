@@ -10,8 +10,8 @@ do
 	extension=$(echo $input | sed 's/^.*\.//')
 	mv "$input" temp.mp4
 	cp temp.mp4 "$filename"_backup.$extension
-#	ffmpeg -i temp.mp4 -threads 0 -acodec libfaac -ab 128k -vcodec libx264 -crf 21 -f mp4 "$filename.mp4"
-	MP4Box -add temp.mp4 "$filename.mp4"
+	ffmpeg -i temp.mp4 -threads 0 -acodec libfaac -ab 128k -vcodec libx264 -crf 21 -f mp4 "$filename.mp4"
+#	MP4Box -add temp.mp4 "$filename.mp4"
 	rm temp.mp4 "$filename"_backup.$extension
 done
 
