@@ -113,11 +113,17 @@ do
 done    
 
 aria2c -x10 -c -i $sid.down
-ffmpeg -i part1.$format -vcodec copy -acodec copy part1.mp4
+if [ "$format" != 'mp4' ]
+then
+	ffmpeg -i part1.$format -vcodec copy -acodec copy part1.mp4
+fi
 comm='-add part1.mp4'
 for ((i=2;i<=$num;i++))
 do
-	ffmpeg -i part$i.$format -vcodec copy -acodec copy part$i.mp4
+	if [ "$format" != 'mp4' ]
+	then
+		ffmpeg -i part$i.$format -vcodec copy -acodec copy part$i.mp4
+	fi
 	comm="$comm -cat part$i.mp4"
 done
 echo $comm
