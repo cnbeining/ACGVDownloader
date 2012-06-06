@@ -115,21 +115,25 @@ done
 aria2c -x10 -c -i $sid.down
 if [ "$format" != 'mp4' ]
 then
-	ffmpeg -i part1.$format -vcodec copy -acodec copy part1.mp4
+	#ffmpeg -i part1.$format -vcodec copy -acodec copy part1.mp4
+	../flv2mp4.sh part1.$format part1.mp4
 fi
 comm='-add part1.mp4'
 for ((i=2;i<=$num;i++))
 do
 	if [ "$format" != 'mp4' ]
 	then
-		ffmpeg -i part$i.$format -vcodec copy -acodec copy part$i.mp4
+		#ffmpeg -i part$i.$format -vcodec copy -acodec copy part$i.mp4
+		../flv2mp4.sh part$i.$format part$i.mp4
 	fi
 	comm="$comm -cat part$i.mp4"
 done
 echo $comm
-MP4Box $comm "$id - $title.mp4"
+MP4Box -force-cat $comm result.mp4
+mv result.mp4 "$id - $title.mp4"
 
-mv "$id - $title.mp4" ../;cd ..;rm -rf $id
+mv "$id - $title.mp4" ../;cd ..;
+rm -rf $id
 
 if [ "$rid" ]; then sid=$(echo $rid | sed '_/_=_');fi
 

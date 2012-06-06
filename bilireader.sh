@@ -19,8 +19,7 @@ cookieloc=$(find ~/.mozilla/firefox/ -name "cookies.sqlite")
 id=$2
 echo $id
 mkdir $id;cd $id #create a temp folder to download the video
-cp ../extract_cookies.sh ./ # so that bilidowner can catch this file
-cp ../xml2ass.py ./
+cp ../extract_cookies.sh ../xml2ass.py ../flv2mp4.sh ./ # so that bilidowner can catch this file
 mv ../$1 ./
 
 cat $1 | grep -i "<a href" | sed "s/.*<a href=\"\(.*\)\/\#titles.*/\1\//" > $id.list
