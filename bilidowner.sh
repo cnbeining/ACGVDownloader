@@ -129,7 +129,7 @@ mv temp.mp4 ../"$id - $title.mp4";cd ..;rm -rf $id
 
 if [ "$rid" ]; then sid=$(echo $rid | sed '_/_=_');fi
 
-curl --cookie /tmp/cookies.txt --compressed -o "$id - $title.xml" "http://comment.bilibili.tv/dm,$sid"	
+curl --cookie /tmp/cookies.txt --compressed -o "$id - $title.xml" "http://comment.bilibili.tv/$sid.xml"	
 
 source /usr/tigerdav/tigerdav/ENV/bin/activate # start the virtualenv, comment this if you don't need to (or just ignore this...)
 python xml2ass.py "$id - $title.xml" 
