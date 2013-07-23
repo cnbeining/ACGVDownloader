@@ -39,7 +39,7 @@ echo $sid
 downlink=$(cat $sid".html" | grep "name=\"inf\"" | sed "s/.*value=\"\(.*\)/\1/"| sed "s/\r//")
 echo $downlink
 format=flv
-aria2c -j10 --out="$sid - $title.$format" $downlink
+aria2c -j10 -c --out="$sid - $title.$format" $downlink
 
 #cat temp.down | sed  -e '/<br>/d' -e '/<BR>/d' -e '/<script/d' -e "/\r/d" -e 's/<U>//' | sed '/</d' > temp2.down
 #iconv -c -f utf-8 -t ascii temp.down  | sed  -e '/<script/d' -e '/<input/d' | sed 's/.*href=\"\(.*\)\" target=.*/\1/' >> temp2.down
